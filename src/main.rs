@@ -1,21 +1,9 @@
-use gluesql::prelude::*;
+mod db;
 
 #[actix_web::main]
 async fn main()  -> std::io::Result<()> {
-    let storage = SledStorage::new("data/doc-db").unwrap();
-    let mut glue = Glue::new(storage);
-    let sqls = vec![
-        "DROP TABLE IF EXISTS Glue;",
-        "CREATE TABLE Glue (id INTEGER);",
-        "INSERT INTO Glue VALUES (100);",
-        "INSERT INTO Glue VALUES (200);",
-        "SELECT * FROM Glue WHERE id >= 100;",
-    ];
-
-    for sql in sqls {
-        let output = glue.execute(sql).unwrap();
-        println!("{:?}", output)
-    }
+    db::init();
+    db::add_test_data();
 
     HttpServer::new(|| {
         App::new()
@@ -33,7 +21,8 @@ use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
 
 #[get("/")]
 async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
+    let output = db::get_content();
+    HttpResponse::Ok().body(format!("{:?}", output))
 }
 
 #[post("/echo")]
