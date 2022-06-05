@@ -2,6 +2,9 @@
 use gluesql::prelude::*;
 
 pub fn init(){
+    /*
+    create GlueBoard table
+    */
     let storage = SledStorage::new("data/doc-db").unwrap();
     let mut glue = Glue::new(storage);
     let sqls = vec![
@@ -16,6 +19,12 @@ pub fn init(){
 }
 
 pub fn add_test_data(){
+    /*
+    Add test data to GlueBoard DataBase
+    Parmeters:
+    return:
+    */
+
     let storage = SledStorage::new("data/doc-db").unwrap();
     let mut glue = Glue::new(storage);
     let sqls = vec![
@@ -30,6 +39,12 @@ pub fn add_test_data(){
 }
 
 pub fn get_content() -> String {
+    /*
+    Get content from GlueBoard DataBase
+    parameters:
+    return:
+    */
+
     let storage = SledStorage::new("data/doc-db").unwrap();
     let mut glue = Glue::new(storage);
     let sql = "SELECT * FROM GlueBoard WHERE id >= 100;";
